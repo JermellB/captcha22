@@ -257,8 +257,8 @@ class data_source:
     def get_update(self, folder):
         update = {}
         try:
-            f = open(folder + "/model.txt")
-            lines = f.readlines()
+            with open(folder + "/model.txt") as f:
+                lines = f.readlines()
             update['hasTrained'] = ast.literal_eval(lines[0].replace("\n", ""))
             update['busyTraining'] = ast.literal_eval(
                 lines[1].replace("\n", ""))

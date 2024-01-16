@@ -29,8 +29,8 @@ class captcha:
         self.modelOn = False
 
         try:
-            f = open(self.path + 'model.txt')
-            lines = f.readlines()
+            with open(self.path + 'model.txt') as f:
+                lines = f.readlines()
             self.hasTrained = ast.literal_eval(lines[0].replace("\n", ""))
             self.busyTraining = ast.literal_eval(lines[1].replace("\n", ""))
             self.hasModel = ast.literal_eval(lines[2].replace("\n", ""))
