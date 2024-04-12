@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-import argparse
 import base64
 import getpass
 import glob
@@ -8,12 +7,12 @@ import hashlib
 import io
 import json
 import os
-import sys
 import time
 import requests
 import cv2
 import numpy as np
 from PIL import Image
+from security import safe_requests
 
 
 class Cracker:
@@ -176,7 +175,7 @@ class Cracker:
 
     def auth_to_api(self):
         url = self.serverURL + "generate_token"
-        r = requests.get(url, auth=requests.auth.HTTPBasicAuth(
+        r = safe_requests.get(url, auth=requests.auth.HTTPBasicAuth(
             self.username, self.password))
         load = json.loads(r.content)
         if load['message'] == 'success':
@@ -256,7 +255,7 @@ class Cracker:
 
     def get_captcha_details(self, captchaID):
         url = self.serverURL + "captchas/" + str(captchaID)
-        r = requests.get(url, headers=self.build_token_headers())
+        r = safe_requests.get(url, headers=self.build_token_headers())
         json_data = json.loads(r.content)
         print(json.dumps(json_data, indent=2))
         return r.content
