@@ -63,10 +63,9 @@ class Client:
         r = requests.get(url, headers=self.build_token_headers())
 
         newFileByteArray = bytearray(r.content)
+        with open("exported-model.zip", 'wb') as newfile:
 
-        newfile = open("exported-model.zip", 'wb')
-
-        newfile.write(newFileByteArray)
+            newfile.write(newFileByteArray)
 
     def update_model_active(self, captchaID, answer):
         token = self.get_captcha_token(captchaID)
