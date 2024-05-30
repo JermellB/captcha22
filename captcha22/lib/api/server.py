@@ -14,6 +14,7 @@ from flask import Flask, abort, jsonify, make_response, request, send_file
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from flask_restful import Api, Resource, fields, marshal, reqparse
 from werkzeug.security import check_password_hash, generate_password_hash
+import math
 
 class user:
     def __init__(self, username, password):
@@ -322,7 +323,7 @@ class data_source:
                 temp = (line.replace('\n', '').split(',')[-1].split('%'))
                 accuracy = temp[1]
                 answer = temp[2]
-                if float(accuracy) == 100.0:
+                if math.isclose(float(accuracy), 100.0, rel_tol=1e-09, abs_tol=0.0):
                     correct += 1
                 else:
                     wrongs.append(answer)
