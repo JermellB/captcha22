@@ -257,8 +257,8 @@ class data_source:
     def get_update(self, folder):
         update = {}
         try:
-            f = open(folder + "/model.txt")
-            lines = f.readlines()
+            with open(folder + "/model.txt") as f:
+                lines = f.readlines()
             update['hasTrained'] = ast.literal_eval(lines[0].replace("\n", ""))
             update['busyTraining'] = ast.literal_eval(
                 lines[1].replace("\n", ""))
@@ -312,8 +312,8 @@ class data_source:
     def get_results(self, captcha):
         file_location = self.WORK + captcha['username'].replace(" ", "") + "/" + captcha['title'].replace(
             " ", "") + "/" + str(captcha['modelNumber']) + "/test.txt"
-        f = open(file_location)
-        lines = f.readlines()
+        with open(file_location) as f:
+            lines = f.readlines()
         count = 0
         correct = 0
         wrongs = []

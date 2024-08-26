@@ -29,8 +29,8 @@ class captcha:
         self.modelOn = False
 
         try:
-            f = open(self.path + 'model.txt')
-            lines = f.readlines()
+            with open(self.path + 'model.txt') as f:
+                lines = f.readlines()
             self.hasTrained = ast.literal_eval(lines[0].replace("\n", ""))
             self.busyTraining = ast.literal_eval(lines[1].replace("\n", ""))
             self.hasModel = ast.literal_eval(lines[2].replace("\n", ""))
@@ -60,8 +60,8 @@ class captcha:
         self.image_height = img.shape[0]
 
     def update_from_file(self):
-        f = open(self.path + 'model.txt')
-        lines = f.readlines()
+        with open(self.path + 'model.txt') as f:
+            lines = f.readlines()
         self.hasTrained = ast.literal_eval(lines[0].replace("\n", ""))
         self.busyTraining = ast.literal_eval(lines[1].replace("\n", ""))
         self.hasModel = ast.literal_eval(lines[2].replace("\n", ""))
@@ -80,22 +80,22 @@ class captcha:
         self.modelOn = ast.literal_eval(lines[14].replace("\n", ""))
 
     def update_file(self):
-        f = open(self.path + 'model.txt', 'w')
-        f.write(str(self.hasTrained) + "\n")
-        f.write(str(self.busyTraining) + "\n")
-        f.write(str(self.hasModel) + "\n")
-        f.write(str(self.modelActive) + "\n")
-        f.write(str(self.modelPorts) + "\n")
-        f.write(str(self.currentTrainingLevel) + "\n")
-        f.write(str(self.image_width) + "\n")
-        f.write(str(self.image_height) + "\n")
-        f.write(str(self.last_step) + "\n")
-        f.write(str(self.loss) + "\n")
-        f.write(str(self.perplexity) + "\n")
-        f.write(str(self.checkpoint) + "\n")
-        f.write(str(self.modelName) + "\n")
-        f.write(str(self.modelPath) + "\n")
-        f.write(str(self.modelOn) + "\n")
+        with open(self.path + 'model.txt', 'w') as f:
+            f.write(str(self.hasTrained) + "\n")
+            f.write(str(self.busyTraining) + "\n")
+            f.write(str(self.hasModel) + "\n")
+            f.write(str(self.modelActive) + "\n")
+            f.write(str(self.modelPorts) + "\n")
+            f.write(str(self.currentTrainingLevel) + "\n")
+            f.write(str(self.image_width) + "\n")
+            f.write(str(self.image_height) + "\n")
+            f.write(str(self.last_step) + "\n")
+            f.write(str(self.loss) + "\n")
+            f.write(str(self.perplexity) + "\n")
+            f.write(str(self.checkpoint) + "\n")
+            f.write(str(self.modelName) + "\n")
+            f.write(str(self.modelPath) + "\n")
+            f.write(str(self.modelOn) + "\n")
 
     def export_model(self):
         print("Going to extract the model")
@@ -123,27 +123,26 @@ class captcha:
 
     def test_training_level(self):
         print("Testing training level")
-        # Go read the aocr log
-        f = open(self.path + "aocr.log")
-        lines = f.readlines()
-        lastUpdate = ""
-        for line in lines:
-            if line.find("Step") != -1:
-                lastUpdate = line
-
-        values = lastUpdate.split(',')
-        step = ast.literal_eval(values[1].split('Step ')[1].split(':')[0])
-
-        # We need to combine two values, the current step and the last saved step. This gives us the total step.
-        current_checkpoint = 0
-        try:
-            f = open(self.path + "/checkpoints/checkpoint")
+        with open(self.path + "aocr.log") as f:
             lines = f.readlines()
-            current_checkpoint = ast.literal_eval(
-                lines[0].split('ckpt-')[1].split("\"")[0])
-        except:
-            print("No current checkpoint")
-            pass
+            lastUpdate = ""
+            for line in lines:
+                if line.find("Step") != -1:
+                    lastUpdate = line
+
+            values = lastUpdate.split(',')
+            step = ast.literal_eval(values[1].split('Step ')[1].split(':')[0])
+
+            # We need to combine two values, the current step and the last saved step. This gives us the total step.
+            current_checkpoint = 0
+            try:
+                f = open(self.path + "/checkpoints/checkpoint")
+                lines = f.readlines()
+                current_checkpoint = ast.literal_eval(
+                    lines[0].split('ckpt-')[1].split("\"")[0])
+            except:
+                print("No current checkpoint")
+                pass
 
         while (step > 100):
             step -= 100
