@@ -10,10 +10,12 @@ import string
 import time
 import uuid
 import requests
-from flask import Flask, abort, jsonify, make_response, request, send_file
+from flask import Flask, abort, jsonify, make_response, request
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from flask_restful import Api, Resource, fields, marshal, reqparse
 from werkzeug.security import check_password_hash, generate_password_hash
+import flask
+from pathlib import Path
 
 class user:
     def __init__(self, username, password):
@@ -468,7 +470,7 @@ class ExportAPI(Resource):
         shutil.make_archive(file_location, 'zip', file_location)
 
         local_file_to_send = file_location + ".zip"
-        return send_file(local_file_to_send, attachment_filename='exported_model.zip')
+        return flask.send_from_directory((p := Path(local_file_to_send)).parent, p.name, attachment_filename='exported_model.zip')
 
 
 class GetProgressAPI(Resource):
