@@ -24,7 +24,7 @@ class Client:
     def get_token(self):
         url = self.serverURL + "generate_token"
         r = requests.get(url, auth=requests.auth.HTTPBasicAuth(
-            self.username, self.password))
+            self.username, self.password), timeout=60)
         load = json.loads(r.content)
         if load['message'] == 'success':
             print("Got token")
@@ -37,7 +37,7 @@ class Client:
 
     def get_captcha_details(self, captchaID):
         url = self.serverURL + "captchas/" + str(captchaID)
-        r = requests.get(url, headers=self.build_token_headers())
+        r = requests.get(url, headers=self.build_token_headers(), timeout=60)
         json_data = json.loads(r.content)
         print(json.dumps(json_data, indent=2))
 
@@ -60,7 +60,7 @@ class Client:
                     'dataToken': token
                 }
                 r = requests.post(
-                    url, json=datas, headers=self.build_token_headers())
+                    url, json=datas, headers=self.build_token_headers(), timeout=60)
                 json_data = json.loads(r.content)
                 print(json.dumps(json_data, indent=2))
                 img = cv2.imread(image)

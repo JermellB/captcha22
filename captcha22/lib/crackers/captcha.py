@@ -177,7 +177,7 @@ class Cracker:
     def auth_to_api(self):
         url = self.serverURL + "generate_token"
         r = requests.get(url, auth=requests.auth.HTTPBasicAuth(
-            self.username, self.password))
+            self.username, self.password), timeout=60)
         load = json.loads(r.content)
         if load['message'] == 'success':
             print("Got token")
@@ -199,7 +199,7 @@ class Cracker:
             'image': encoded_string.decode("utf-8"),
             'dataToken': token
         }
-        r = requests.post(url, json=datas, headers=self.build_token_headers())
+        r = requests.post(url, json=datas, headers=self.build_token_headers(), timeout=60)
         # Inject code here to talk to Pyppeteer
         json_data = json.loads(r.content)
         print(json.dumps(json_data, indent=2))
@@ -212,7 +212,7 @@ class Cracker:
             "inputs": {"input": {"b64": b64_image.decode("utf-8")}}
         }
         url = self.serverURL
-        r = requests.post(url, json=data)
+        r = requests.post(url, json=data, timeout=60)
         buf = r.content
         stuff = buf.decode('utf-8')
         posted_data = json.loads(stuff)
@@ -256,7 +256,7 @@ class Cracker:
 
     def get_captcha_details(self, captchaID):
         url = self.serverURL + "captchas/" + str(captchaID)
-        r = requests.get(url, headers=self.build_token_headers())
+        r = requests.get(url, headers=self.build_token_headers(), timeout=60)
         json_data = json.loads(r.content)
         print(json.dumps(json_data, indent=2))
         return r.content

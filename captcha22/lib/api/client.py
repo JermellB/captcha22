@@ -21,7 +21,7 @@ class Client:
     def get_token(self):
         url = self.serverURL + "generate_token"
         r = requests.get(url, auth=requests.auth.HTTPBasicAuth(
-            self.username, self.password))
+            self.username, self.password), timeout=60)
         load = json.loads(r.content)
         if load['message'] == 'success':
             print("Got token")
@@ -34,13 +34,13 @@ class Client:
             ('document', ("hello", open(dataFile, 'rb'), 'application/octet')),
             ('captcha', ('captcha', json.dumps(datas), 'application/json')),
         ]
-        r = requests.post(url, files=files, headers=self.build_token_headers())
+        r = requests.post(url, files=files, headers=self.build_token_headers(), timeout=60)
         json_data = json.loads(r.content)
         print(json.dumps(json_data, indent=2))
 
     def get_captcha_details(self, captchaID):
         url = self.serverURL + "captchas/" + str(captchaID)
-        r = requests.get(url, headers=self.build_token_headers())
+        r = requests.get(url, headers=self.build_token_headers(), timeout=60)
         json_data = json.loads(r.content)
         print(json.dumps(json_data, indent=2))
 
@@ -53,14 +53,14 @@ class Client:
 
     def get_all_models(self):
         url = self.serverURL + "captchas"
-        r = requests.get(url, headers=self.build_token_headers())
+        r = requests.get(url, headers=self.build_token_headers(), timeout=60)
         json_data = json.loads(r.content)
         print(json.dumps(json_data, indent=2))
 
     def get_exported_model(self, captchaID):
         token = self.get_captcha_token(captchaID)
         url = self.serverURL + "export_model/" + token
-        r = requests.get(url, headers=self.build_token_headers())
+        r = requests.get(url, headers=self.build_token_headers(), timeout=60)
 
         newFileByteArray = bytearray(r.content)
 
@@ -79,21 +79,21 @@ class Client:
             ('captcha', ('captcha', json.dumps(datas), 'application/json')),
         ]
 
-        r = requests.post(url, json=datas, headers=self.build_token_headers())
+        r = requests.post(url, json=datas, headers=self.build_token_headers(), timeout=60)
         json_data = json.loads(r.content)
         print(json.dumps(json_data, indent=2))
 
     def get_training_update(self, captchaID):
         token = self.get_captcha_token(captchaID)
         url = self.serverURL + "training_update/" + token
-        r = requests.get(url, headers=self.build_token_headers())
+        r = requests.get(url, headers=self.build_token_headers(), timeout=60)
         json_data = json.loads(r.content)
         print(json.dumps(json_data, indent=2))
 
     def get_results(self, captchaID):
         token = self.get_captcha_token(captchaID)
         url = self.serverURL + "results/" + token
-        r = requests.get(url, headers=self.build_token_headers())
+        r = requests.get(url, headers=self.build_token_headers(), timeout=60)
         json_data = json.loads(r.content)
         print(json.dumps(json_data, indent=2))
 
@@ -110,7 +110,7 @@ class Client:
             'image': encoded_string,
             'dataToken': token
         }
-        r = requests.post(url, json=datas, headers=self.build_token_headers())
+        r = requests.post(url, json=datas, headers=self.build_token_headers(), timeout=60)
         json_data = json.loads(r.content)
         print(json.dumps(json_data, indent=2))
 

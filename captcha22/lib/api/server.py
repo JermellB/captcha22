@@ -248,7 +248,7 @@ class data_source:
         url = "http://127.0.0.1:" + \
             str(update['modelPorts'] + 1) + "/v1/models/" + \
             str(update['modelName']) + ":predict"
-        r = requests.post(url, json=data)
+        r = requests.post(url, json=data, timeout=60)
         buf = r.content
         stuff = buf.decode('utf-8')
         posted_data = json.loads(stuff)
