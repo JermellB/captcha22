@@ -4,7 +4,6 @@ import argparse
 import ast
 import glob
 import json
-import random
 import shutil
 import string
 import time
@@ -14,6 +13,7 @@ from flask import Flask, abort, jsonify, make_response, request, send_file
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from flask_restful import Api, Resource, fields, marshal, reqparse
 from werkzeug.security import check_password_hash, generate_password_hash
+import secrets
 
 class user:
     def __init__(self, username, password):
@@ -677,7 +677,7 @@ class GenerateTokenAPI(Resource):
                 count = len(user.tokens)
                 if count >= self.data_source.max_tokens:
                     return make_response(jsonify({'token': '', 'message': 'maximum amount of tokens generated'}), 200)
-                lst = [random.choice(string.ascii_letters + string.digits)
+                lst = [secrets.choice(string.ascii_letters + string.digits)
                        for n in range(128)]
                 str_ = "".join(lst)
                 user.tokens[uuid.uuid1()] = [str_, time.time()]
